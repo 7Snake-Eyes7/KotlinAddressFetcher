@@ -2,6 +2,8 @@ package com.vayana
 
 import com.vayana.Users.name
 import io.ktor.application.*
+import io.ktor.features.ContentNegotiation
+import io.ktor.gson.gson
 import io.ktor.request.receive
 import io.ktor.response.respond
 import io.ktor.routing.*
@@ -77,8 +79,16 @@ fun Application.module(testing: Boolean = false) {
                 }
                 call.respond(user)
             }
+
+            install(ContentNegotiation){
+
+                gson {
+
+                }
+            }
         }
     }
 }
+
 
 
