@@ -41,12 +41,6 @@ fun Application.module(testing: Boolean = false) {
         user = "root", password = "root")
     transaction {
         SchemaUtils.create(Users)
-
-        Users.insert {
-            it[Users.name] = "rak"
-            it[Users.age] = 25
-            it[Users.address] = "bengaluru"
-        }
     }
 
     install(Routing){
