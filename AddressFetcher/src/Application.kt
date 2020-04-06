@@ -43,44 +43,11 @@ fun Application.module(testing: Boolean = false) {
         SchemaUtils.create(Users)
     }
 
-    install(Routing){
-        route("/user"){
-
-            get("/"){
-                val users = transaction {
-                    Users.selectAll().map{Users.toUser(it)}
-                }
-                call.respond(users)
-            }
-
-            get("/{id}"){
-
-                val id = call.parameters["id"]!!.toInt()
-                val users = transaction {
-                    Users.select { Users.id eq id}.map{Users.toUser(it)}
-                }
-                call.respond(users)
-            }
-
-            post("/"){
-                val user = call.receive<User>()
-                transaction {
-                    Users.insert {
-                        it[Users.name] = user.name
-                        it[Users.age] = user.age
-                        it[Users.address] = user.address
-                    }
-                }
-                call.respond(user)
-            }
-
-            install(ContentNegotiation){
-
-                gson {
-
-                }
-            }
-        }
+    routing{
+        this.getUsers()
+        this.getUserById()
+        this.post()
+        this.contentNegotiation()
     }
 }
 
