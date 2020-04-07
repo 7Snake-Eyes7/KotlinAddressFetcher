@@ -1,14 +1,10 @@
 package com.vayana
 
-import com.vayana.Users.name
 import io.ktor.application.*
-import io.ktor.features.ContentNegotiation
-import io.ktor.gson.gson
-import io.ktor.request.receive
-import io.ktor.response.respond
 import io.ktor.routing.*
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
+import de.jupf.staticlog.Log
 
 fun main(args: Array<String>): Unit = io.ktor.server.jetty.EngineMain.main(args)
 
@@ -21,21 +17,26 @@ fun Application.module(testing: Boolean = false) {
         transaction {
             SchemaUtils.create(Users)
         }
-
     }
     catch (e:Exception){
-        println("invalid credentials")
+        Log.warn("invalid credentials")
     }
-    finally{
-        Database.connect("jdbc:mysql://localhost:3306/userDetails?createDatabaseIfNotExist=true", driver = "com.mysql.jdbc.Driver", user = "root", password = "root")
+    finally {
+        //if the schema does'nt exist, it ll create one to perform the operations
+        Database.connect(
+            "jdbc:mysql://localhost:3306/userDetails?createDatabaseIfNotExist=true",
+            driver = "com.mysql.jdbc.Driver",
+            user = "root",
+            password = "root"
+        )
     }
-
 
     routing {
         this.getUsers()
         this.getUserById()
         this.post()
         this.contentNegotiation()
+        this.helloWorld()
     }
 
 }
