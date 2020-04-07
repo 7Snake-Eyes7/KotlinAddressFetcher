@@ -15,10 +15,9 @@ import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 
-
-
+const val path = "/user/"
 fun Routing.getUsers(){
-    get("/user"){
+    get(path){
         val users = transaction {
             Users.selectAll().map{Users.toUser(it)}
         }
@@ -28,7 +27,7 @@ fun Routing.getUsers(){
 }
 
 fun Routing.getUserById(){
-    get("/user/{id}"){
+    get("$path{id}"){
 
         val id = call.parameters["id"]!!.toInt()
         val users = transaction {
@@ -42,7 +41,7 @@ fun Routing.getUserById(){
 
 
 fun Routing.post(){
-    post("/user"){
+    post(path){
         val user = call.receive<User>()
         transaction {
             Users.insert {
