@@ -1,11 +1,9 @@
 package com.vayana
 
 import arrow.core.Option
-import arrow.core.getOrElse
 import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.Table
-import java.util.*
 
 // database connection properties
 val user:String? = System.getenv("sqlUserName")?: throw Exception(userNameRequired)
@@ -31,6 +29,7 @@ object Users: Table() {
             age = row[Users.age],
             address = row[Users.address]
         ))
+
 }
 
 

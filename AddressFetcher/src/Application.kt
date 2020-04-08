@@ -1,10 +1,11 @@
 package com.vayana
 
-import io.ktor.application.*
-import io.ktor.routing.*
-import org.jetbrains.exposed.sql.*
-import org.jetbrains.exposed.sql.transactions.transaction
 import de.jupf.staticlog.Log
+import io.ktor.application.Application
+import io.ktor.routing.routing
+import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.sql.SchemaUtils
+import org.jetbrains.exposed.sql.transactions.transaction
 
 fun main(args: Array<String>): Unit = io.ktor.server.jetty.EngineMain.main(args)
 
@@ -30,7 +31,7 @@ fun Application.module(testing: Boolean = false) {
             password = "root"
         )
     }
-
+//this is to handle all the routes, each protocol has its own function
     routing {
         this.getUsers()
         this.getUserById()
