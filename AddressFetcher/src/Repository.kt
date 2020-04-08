@@ -5,13 +5,6 @@ import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.Table
 
-// database connection properties
-val user:String? = System.getenv("sqlUserName")?: throw Exception(userNameRequired)
-val password:String? = System.getenv("sqlPassword")?: throw Exception(passwordRequired)
-val url:String? = System.getenv("url")?: throw Exception(urlRequired)
-val driver:String? = System.getenv("driver")?: throw Exception(driverRequired)
-
-
 data class User(val id: Int? =null, val name:String, val age:Int, val address:String)
 
 object Users: Table() {
@@ -22,7 +15,7 @@ object Users: Table() {
 
     override val primaryKey = PrimaryKey(id, name = "PK_USER_IDs")
 
-    fun toUser(row: ResultRow): Option<User?> =
+    fun toUser(row: ResultRow): Option<User> =
         Option(User(
             id = row[Users.id],
             name = row[Users.name],

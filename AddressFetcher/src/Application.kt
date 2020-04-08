@@ -14,7 +14,7 @@ fun main(args: Array<String>): Unit = io.ktor.server.jetty.EngineMain.main(args)
 fun Application.module(testing: Boolean = false) {
 
     try{
-        Database.connect("$url", driver = "$driver", user = "$user", password = "$password")
+        Database.connect(url, driver = driver, user = user, password = password)
         transaction {
             SchemaUtils.create(Users)
         }
@@ -25,10 +25,10 @@ fun Application.module(testing: Boolean = false) {
     finally {
         //if the schema does'nt exist, it ll create one to perform the operations
         Database.connect(
-            "jdbc:mysql://localhost:3306/userDetails?createDatabaseIfNotExist=true",
-            driver = "com.mysql.jdbc.Driver",
-            user = "root",
-            password = "root"
+            url0,
+            driver = driver0,
+            user = user0,
+            password = password0
         )
     }
 //this is to handle all the routes, each protocol has its own function
