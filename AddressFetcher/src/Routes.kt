@@ -8,6 +8,7 @@ import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.features.ContentNegotiation
 import io.ktor.gson.gson
+import io.ktor.http.HttpStatusCode
 import io.ktor.request.receive
 import io.ktor.response.respond
 import io.ktor.routing.Routing
@@ -15,28 +16,22 @@ import io.ktor.routing.get
 import io.ktor.routing.post
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
-import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 
 const val path = "/user/"
 
 fun Routing.getUsers(){
     get(path){
-        try{
-            val users: Either<Exception, List<Option<User>>> = Either.Right(transaction {
-                Users.selectAll().map{Users.toUser(it)}
-            })
-            call.respond(users)
-            Log.info("The output is $users")
-
-        }
-        catch (e:Exception){
-            Either.Left("Internal server error")
-            Log.warn("something went wrong")
-        }
-
+        getAllUsers().fold(
+            {
+                call.respond(HttpStatusCode.InternalServerError, it)
+            },
+            {users ->
+                call.respond(users)
+                Log.info("The output is $users")
+            }
+        )
     }
-
 }
 
 fun Routing.getUserById(){

@@ -1,22 +1,13 @@
 package com.vayana
 
-import arrow.core.Either
-import arrow.core.left
-import arrow.core.right
+import arrow.core.*
 
-// database connection properties
+data class Fault(val errMsg:String, val ex: Option<Throwable> = None, val args: Map<String, Any> = emptyMap())
 
-//typealias Fault = String
-
-//val user: Either<Fault, String> = System.getenv("sqlUserName").right()?: urlRequired.left()
-//val password: Either<Fault, String> = System.getenv("sqlPassword").right()?: passwordRequired.left()
-//val url: Either<Fault, String> = System.getenv("url").right() ?: urlRequired.left()
-//val driver: Either<Fault, String> = System.getenv("driver").right() ?: driverRequired.left()
-
-val user:String = System.getenv("sqlUserName")?: throw Exception(userNameRequired)
-val password:String = System.getenv("sqlPassword")?: throw Exception(passwordRequired)
-val url:String = System.getenv("url")?: throw Exception(urlRequired)
-val driver:String = System.getenv("driver")?: throw Exception(driverRequired)
+fun getSqlUserName(): Either<Fault, String> = System.getenv("sqlUserName")?.right() ?: Fault(userNameRequired).left()
+fun getSqlPassword(): Either<Fault, String> = System.getenv("sqlPassword")?.right() ?: Fault(passwordRequired).left()
+fun getSqlUrl(): Either<Fault, String> = System.getenv("url")?.right() ?: Fault(urlRequired).left()
+fun getSqlDriver(): Either<Fault, String> = System.getenv("driver")?.right() ?: Fault(driverRequired).left()
 
 //if not set up in the run time environment, the default connection properties ll be as follows
 

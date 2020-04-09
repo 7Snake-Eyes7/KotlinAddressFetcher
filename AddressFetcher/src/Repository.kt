@@ -1,11 +1,16 @@
 package com.vayana
 
+import arrow.core.Either
 import arrow.core.Option
+import arrow.core.left
+import arrow.core.right
 import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.Table
+import org.jetbrains.exposed.sql.selectAll
+import org.jetbrains.exposed.sql.transactions.transaction
 
-data class User(val id: Int? =null, val name:String, val age:Int, val address:String)
+data class User(val id: Int?, val name:String, val age:Int, val address:String)
 
 object Users: Table() {
     val id: Column<Int> = integer("id").autoIncrement()
@@ -24,5 +29,15 @@ object Users: Table() {
         ))
 
 }
+
+fun getAllUsers(): Either<Fault, List<Option<User>>> =
+        try {
+            transaction {
+                Users.selectAll().map{Users.toUser(it)}
+            }.right()
+        }
+        catch(ex: Exception){
+            Fault(failedToFetchUsers).left()
+        }
 
 
